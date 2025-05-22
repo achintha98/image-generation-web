@@ -1,44 +1,16 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
 export function UploadModal() {
-  const [isDragging, setIsDragging] = useState(false);
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(e.type === "dragenter" || e.type === "dragover");
-  }, []);
-
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  }, []);
-
   return (
     <Card className="w-full rounded-none border-none mx-auto shadow-none">
       <CardContent className="pt-6 px-0">
         <div
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
           className={cn(
-            "flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-10 transition-all",
-            isDragging
-              ? "border-emerald-500 bg-emerald-100"
-              : "border-muted-foreground hover:border-emerald-400"
+            "flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-10 transition-all"
           )}
         >
           <CloudUploadIcon className="w-16 h-16 text-neutral-400" />
@@ -50,11 +22,18 @@ export function UploadModal() {
             <Button
               variant="outline"
               size="lg"
+              type="button"
               onClick={() => {
                 const input = document.createElement("input");
                 input.type = "file";
                 input.accept = "image/*";
                 input.multiple = true;
+                input.onchange = () => {
+                  console.log("Files selected:");
+                  console.log(input.files);
+                };
+
+                input.click();
               }}
             >
               Browse Files
