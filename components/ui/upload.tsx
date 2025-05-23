@@ -3,6 +3,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import JSZip from "jszip";
+import axios from "axios";
 
 export function UploadModal() {
   return (
@@ -28,9 +30,30 @@ export function UploadModal() {
                 input.type = "file";
                 input.accept = "image/*";
                 input.multiple = true;
-                input.onchange = () => {
+                input.onchange = async () => {
                   console.log("Files selected:");
                   console.log(input.files);
+                  const files = input.files;
+                  const zip = new JSZip();
+                  const res = await axios.put(
+                    "http://localhost:8080/ai/presign-url"
+                  );
+                  console.log(res);
+                  if (files) {
+                    for (const file of files) {
+                      const content = file.arrayBuffer();
+                      zip.file(file.name, content);
+                    }
+                    const zipFile = await zip.generateAsync({ type: "blob" });
+                    const formData = new FormData();
+                    formData.append("file", zipFile);
+                    formData.append("key", res.request.responseURL);
+                    const basketResponse = axios.put(
+                      res.request.response,
+                      formData
+                    );
+                    console.log(basketResponse);
+                  }
                 };
 
                 input.click();
