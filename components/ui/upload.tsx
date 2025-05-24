@@ -40,6 +40,8 @@ export function UploadModal() {
                   );
                   console.log(res);
                   if (files) {
+                    const key = res.data.key;
+                    const preSignURL = res.data.responseURL;
                     for (const file of files) {
                       const content = file.arrayBuffer();
                       zip.file(file.name, content);
@@ -47,12 +49,13 @@ export function UploadModal() {
                     const zipFile = await zip.generateAsync({ type: "blob" });
                     const formData = new FormData();
                     formData.append("file", zipFile);
-                    formData.append("key", res.request.responseURL);
-                    const basketResponse = axios.put(
-                      res.request.response,
+                    formData.append("key", preSignURL);
+                    const basketResponse = await axios.put(
+                      preSignURL,
                       formData
                     );
                     console.log(basketResponse);
+                    uploadDone("zipUrl" + preSignURL);
                   }
                 };
 
