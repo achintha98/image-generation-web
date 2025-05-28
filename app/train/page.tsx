@@ -52,11 +52,11 @@ const Train = () => {
 
     const token = await getToken();
 
-    console.log(input);
+    console.log(token);
 
     const res = await axios.post("http://localhost:8080/ai/training", input, {
       headers: {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     console.log(res);
