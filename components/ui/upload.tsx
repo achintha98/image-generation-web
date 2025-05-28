@@ -58,7 +58,10 @@ export function UploadModal({
                       preSignURL,
                       formData
                     );
+
                     console.log(basketResponse);
+                    console.log(preSignURL);
+
                     onUploadDone(preSignURL);
                   }
                 };

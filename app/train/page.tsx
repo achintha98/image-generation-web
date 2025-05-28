@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 
+import { useAuth } from "@clerk/nextjs";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,6 +36,8 @@ const Train = () => {
   const [name, setName] = useState("");
   const router = useRouter();
 
+  const { getToken } = useAuth();
+
   async function trainModal() {
     // Add type here
     const input = {
@@ -46,7 +50,16 @@ const Train = () => {
       name,
     };
 
-    const res = await axios.post("http://localhost:8080/ai/training");
+    const token = await getToken();
+
+    console.log(input);
+
+    const res = await axios.post("http://localhost:8080/ai/training", input, {
+      headers: {
+        token: `Bearer ${token}`,
+      },
+    });
+    console.log(res);
     router.push("/");
   }
   return (
@@ -126,16 +139,13 @@ const Train = () => {
           <Button variant="outline" onClick={() => router.push("/")}>
             Cancel
           </Button>
-          <Button
-            disabled={!name || !zipUrl || !type || !ethinicity || !eyeColor}
-            onClick={() => trainModal}
-          >
-            Create Model
-          </Button>
+          <Button onClick={() => trainModal()}>Create Model</Button>
         </CardFooter>
       </Card>
     </div>
   );
 };
+
+// disabled={!name || !zipUrl || !type || !ethinicity || !eyeColor}
 
 export default Train;
