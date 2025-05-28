@@ -6,11 +6,14 @@ import { cn } from "@/lib/utils";
 import JSZip from "jszip";
 import axios from "axios";
 
+import { useAuth } from "@clerk/nextjs";
+
 export function UploadModal({
   onUploadDone,
 }: {
   onUploadDone: (zipUrl: string) => void;
 }) {
+  const { getToken } = useAuth();
   return (
     <Card className="w-full rounded-none border-none mx-auto shadow-none">
       <CardContent className="pt-6 px-0">
@@ -29,18 +32,27 @@ export function UploadModal({
               variant="outline"
               size="lg"
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 const input = document.createElement("input");
                 input.type = "file";
                 input.accept = "image/*";
                 input.multiple = true;
+                const token = await getToken();
+
                 input.onchange = async () => {
+                  console.log(token);
+
                   console.log("Files selected:");
                   console.log(input.files);
                   const files = input.files;
                   const zip = new JSZip();
-                  const res = await axios.put(
-                    "http://localhost:8080/ai/presign-url"
+                  const res = await axios.get(
+                    "http://localhost:8080/ai/presign-url",
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
                   );
                   console.log(res);
                   if (files) {
