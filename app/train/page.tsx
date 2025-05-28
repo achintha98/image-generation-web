@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { UploadModal } from "@/components/ui/upload";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Train = () => {
   const [zipUrl, setZipUrl] = useState("");
@@ -30,6 +32,7 @@ const Train = () => {
   const [eyeColor, setEyeColor] = useState<string>();
   const [bald, setBald] = useState(false);
   const [name, setName] = useState("");
+  const router = useRouter();
 
   async function trainModal() {
     // Add type here
@@ -42,6 +45,9 @@ const Train = () => {
       bald,
       name,
     };
+
+    const res = await axios.post("http://localhost:8080/ai/training");
+    router.push("/");
   }
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -61,11 +67,11 @@ const Train = () => {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Age</Label>
-                <Input id="name" placeholder="Age" />
+                <Input id="age" placeholder="Age" />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Gender</Label>
-                <Input id="name" placeholder="Gender" />
+                <Input id="gender" placeholder="Gender" />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="framework">Ethnicity</Label>
@@ -110,13 +116,22 @@ const Train = () => {
                 <Switch id="isBald" />
                 <Label htmlFor="isBald">Bald</Label>
               </div>
-              <UploadModal></UploadModal>
+              <UploadModal
+                onUploadDone={(zipUrl) => setZipUrl(zipUrl)}
+              ></UploadModal>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button>Create Model</Button>
+          <Button variant="outline" onClick={() => router.push("/")}>
+            Cancel
+          </Button>
+          <Button
+            disabled={!name || !zipUrl || !type || !ethinicity || !eyeColor}
+            onClick={() => trainModal}
+          >
+            Create Model
+          </Button>
         </CardFooter>
       </Card>
     </div>

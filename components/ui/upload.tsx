@@ -6,7 +6,11 @@ import { cn } from "@/lib/utils";
 import JSZip from "jszip";
 import axios from "axios";
 
-export function UploadModal() {
+export function UploadModal({
+  onUploadDone,
+}: {
+  onUploadDone: (zipUrl: string) => void;
+}) {
   return (
     <Card className="w-full rounded-none border-none mx-auto shadow-none">
       <CardContent className="pt-6 px-0">
@@ -49,13 +53,13 @@ export function UploadModal() {
                     const zipFile = await zip.generateAsync({ type: "blob" });
                     const formData = new FormData();
                     formData.append("file", zipFile);
-                    formData.append("key", preSignURL);
+                    formData.append("key", key);
                     const basketResponse = await axios.put(
                       preSignURL,
                       formData
                     );
                     console.log(basketResponse);
-                    uploadDone("zipUrl" + preSignURL);
+                    onUploadDone(preSignURL);
                   }
                 };
 
