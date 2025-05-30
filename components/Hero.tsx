@@ -10,30 +10,45 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
+const imageUrls = [
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/3/38/Gal_Gadot_by_Gage_Skidmore_3.jpg",
+];
+
 const Hero = () => {
   return (
-    <Carousel
-      opts={{
-        align: "start",
-      }}
-      className="w-full max-w-sm"
-    >
-      <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-3xl font-semibold">{index + 1}</span>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <div className="flex justify-center">
+      <div className="max-w-4xl">
+        <h1 className="text-4xl p-2 text-center pb-4">
+          Generate images for yourself and your family
+        </h1>
+        <Carousel>
+          <CarouselContent>
+            {" "}
+            {/* 600x400 ratio */}
+            {imageUrls.map((url, index) => (
+              <CarouselItem key={index} className="basis-1/4">
+                <img
+                  src={url}
+                  alt={`Slide ${index + 1}`}
+                  className="w-max-[400px]"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
+    </div>
   );
 };
 
