@@ -1,5 +1,9 @@
 import React from "react";
 
+import GenerateImage from "@/components/generateImage";
+import Train from "@/components/train";
+import Pack from "@/components/pack";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
@@ -36,28 +40,22 @@ const Dashboard = () => {
 
           <div className="mt-8 bg-card rounded-lg">
             <TabsContent
-              value="camera"
-              className="mt-0 focus-visible:outline-none"
-            >
-              <Camera />
-            </TabsContent>
-            <TabsContent
               value="generate"
               className="mt-0 focus-visible:outline-none"
             >
               <GenerateImage />
             </TabsContent>
             <TabsContent
-              value="packs"
-              className="mt-0 focus-visible:outline-none"
-            >
-              <Packs />
-            </TabsContent>
-            <TabsContent
               value="train"
               className="mt-0 focus-visible:outline-none"
             >
               <Train />
+            </TabsContent>
+            <TabsContent
+              value="packs"
+              className="mt-0 focus-visible:outline-none"
+            >
+              <Pack />
             </TabsContent>
           </div>
         </Tabs>
