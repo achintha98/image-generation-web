@@ -5,14 +5,15 @@ import PackCard from "./PackCard";
 import axios from "axios";
 
 async function getPacks(): Promise<TPack[]> {
-  return axios.get("localhost:8080");
+  return axios.get("http://localhost:8080/pack/bulk");
 }
 
 export async function Pack() {
   const packs = await getPacks();
+  console.log(packs.data);
   return (
     <div>
-      {packs.map((pack) => (
+      {packs.data.map((pack) => (
         <PackCard {...pack} />
       ))}
     </div>

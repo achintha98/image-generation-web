@@ -130,7 +130,7 @@ const Train = () => {
                 <Label htmlFor="isBald">Bald</Label>
               </div>
               <UploadModal
-                onUploadDone={(zipUrl) => setZipUrl(zipUrl)}
+              // onUploadDone={(zipUrl) => setZipUrl(zipUrl)}
               ></UploadModal>
             </div>
           </form>
