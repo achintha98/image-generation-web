@@ -12,7 +12,7 @@ export async function Pack() {
   const packs = await getPacks();
   console.log(packs.data);
   return (
-    <div>
+    <div className="flex">
       {packs.data.map((pack) => (
         <PackCard {...pack} />
       ))}
