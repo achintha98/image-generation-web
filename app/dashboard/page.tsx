@@ -3,6 +3,7 @@ import React from "react";
 import GenerateImage from "@/components/generateImage";
 import Train from "@/components/train";
 import Pack from "@/components/pack";
+import Camera from "@/components/Camera";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -39,6 +40,12 @@ const Dashboard = () => {
           </TabsList>
 
           <div className="mt-8 bg-card rounded-lg">
+            <TabsContent
+              value="camera"
+              className="mt-0 focus-visible:outline-none"
+            >
+              <Camera />
+            </TabsContent>
             <TabsContent
               value="generate"
               className="mt-0 focus-visible:outline-none"
