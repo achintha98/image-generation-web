@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -12,49 +12,60 @@ const GenerateImage = () => {
   const scrollRef = useRef(null);
 
   const [prompt, setPrompt] = useState("");
+  const [models, setModels] = useState("");
   const [selectedModel, setSelectedModel] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getToken } = useAuth();
 
-  const models = [
-    { id: "model1", name: "DreamShaper", image: "/models/dreamshaper.jpg" },
-    {
-      id: "model2",
-      name: "RealisticVision",
-      image: "/models/realisticvision.jpg",
-    },
-    { id: "model3", name: "AnimeStyle", image: "/models/anime.jpg" },
-    { id: "model4", name: "Artistic", image: "/models/artistic.jpg" },
-    { id: "model5", name: "3D Render", image: "/models/3d.jpg" },
-    { id: "model6", name: "Cinematic", image: "/models/cinematic.jpg" },
-    // Add more as needed
-  ];
+  // const models = [
+  //   { id: "model1", name: "DreamShaper", image: "/models/dreamshaper.jpg" },
+  //   {
+  //     id: "model2",
+  //     name: "RealisticVision",
+  //     image: "/models/realisticvision.jpg",
+  //   },
+  //   { id: "model3", name: "AnimeStyle", image: "/models/anime.jpg" },
+  //   { id: "model4", name: "Artistic", image: "/models/artistic.jpg" },
+  //   { id: "model5", name: "3D Render", image: "/models/3d.jpg" },
+  //   { id: "model6", name: "Cinematic", image: "/models/cinematic.jpg" },
+  //   // Add more as needed
+  // ];
 
-  // const handleGenerate = async () => {
-  //   if (!prompt || !selectedModel) return;
+  const handleGenerate = async () => {
+    if (!prompt || !selectedModel) return;
 
-  //   setIsGenerating(true);
-  //   try {
-  //     const token = await getToken();
-  //     await axios.post(
-  //       `${BACKEND_URL}/ai/generate`,
-  //       {
-  //         prompt,
-  //         modelId: selectedModel,
-  //         num: 1,
-  //       },
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     );
-  //     console.log("Image generation started!");
-  //     setPrompt("");
-  //   } catch (error) {
-  //     console.log(error, "Failed to generate image");
-  //   } finally {
-  //     setIsGenerating(false);
-  //   }
-  // };
+    setIsGenerating(true);
+    try {
+      const token = await getToken();
+      await axios.post(
+        `${BACKEND_URL}/ai/generate`,
+        {
+          prompt,
+          modelId: selectedModel,
+          num: 1,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Image generation started!");
+      setPrompt("");
+    } catch (error) {
+      console.log(error, "Failed to generate image");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const token = await getToken();
+      const response = await axios.get(`${BACKEND_URL}/ai/models`);
+      setModels(response.data.models);
+      setSelectedModel(response.data.models[0]?.id);
+    })();
+  }, []);
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-4">
       {/* Model Selector */}
