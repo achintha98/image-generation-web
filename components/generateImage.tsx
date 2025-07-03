@@ -56,31 +56,53 @@ const GenerateImage = () => {
   //   }
   // };
   return (
-    <div className="space-y-4">
-      <div className="text-2xl font-semibold">Select Model</div>
+    <div className="space-y-6 max-w-5xl mx-auto p-4">
+      {/* Model Selector */}
+      <div className="space-y-3">
+        <div className="text-2xl font-semibold">Select Model</div>
 
-      <div
-        ref={scrollRef}
-        className="flex overflow-x-auto no-scrollbar gap-4 scroll-smooth scroll-px-4 snap-x snap-mandatory max-w-4xl"
-      >
-        {models.map((model) => (
-          <div
-            key={model.id}
-            onClick={() => setSelectedModel(model.id)}
-            className={`flex-shrink-0 w-40 snap-start cursor-pointer rounded-lg p-2 border-2 transition duration-200 ${
-              selectedModel === model.id
-                ? "border-blue-500 ring-2 ring-blue-300"
-                : "border-gray-200"
-            }`}
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-auto no-scrollbar gap-4 scroll-smooth scroll-px-4 snap-x snap-mandatory max-w-4xl"
+        >
+          {models.map((model) => (
+            <div
+              key={model.id}
+              onClick={() => setSelectedModel(model.id)}
+              className={`flex-shrink-0 w-40 snap-start cursor-pointer rounded-lg p-2 border-2 transition duration-200 ${
+                selectedModel === model.id
+                  ? "border-blue-500 ring-2 ring-blue-300"
+                  : "border-gray-200"
+              }`}
+            >
+              <img
+                src={model.image}
+                alt={model.name}
+                className="w-full h-24 object-cover rounded-md mb-2"
+              />
+              <div className="text-sm font-medium text-center">
+                {model.name}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div></div>
+        {/* Prompt Input + Button */}
+        <div className="flex items-center gap-3 mt-20">
+          <input
+            type="text"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Enter your prompt..."
+            className="flex-1 border border-gray-300 rounded-md px-4 py-2"
+          />
+          <button
+            disabled={isGenerating || !prompt || !selectedModel}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 disabled:opacity-50"
           >
-            <img
-              src={model.image}
-              alt={model.name}
-              className="w-full h-24 object-cover rounded-md mb-2"
-            />
-            <div className="text-sm font-medium text-center">{model.name}</div>
-          </div>
-        ))}
+            Generate Image <Sparkles size={18} />
+          </button>
+        </div>
       </div>
     </div>
   );
