@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -9,61 +9,80 @@ import { BACKEND_URL } from "@/app/config";
 import { Sparkles } from "lucide-react";
 
 const GenerateImage = () => {
+  const scrollRef = useRef(null);
+
   const [prompt, setPrompt] = useState("");
   const [selectedModel, setSelectedModel] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getToken } = useAuth();
 
-  const handleGenerate = async () => {
-    if (!prompt || !selectedModel) return;
+  const models = [
+    { id: "model1", name: "DreamShaper", image: "/models/dreamshaper.jpg" },
+    {
+      id: "model2",
+      name: "RealisticVision",
+      image: "/models/realisticvision.jpg",
+    },
+    { id: "model3", name: "AnimeStyle", image: "/models/anime.jpg" },
+    { id: "model4", name: "Artistic", image: "/models/artistic.jpg" },
+    { id: "model5", name: "3D Render", image: "/models/3d.jpg" },
+    { id: "model6", name: "Cinematic", image: "/models/cinematic.jpg" },
+    // Add more as needed
+  ];
 
-    setIsGenerating(true);
-    try {
-      const token = await getToken();
-      await axios.post(
-        `${BACKEND_URL}/ai/generate`,
-        {
-          prompt,
-          modelId: selectedModel,
-          num: 1,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      console.log("Image generation started!");
-      setPrompt("");
-    } catch (error) {
-      console.log(error, "Failed to generate image");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+  // const handleGenerate = async () => {
+  //   if (!prompt || !selectedModel) return;
+
+  //   setIsGenerating(true);
+  //   try {
+  //     const token = await getToken();
+  //     await axios.post(
+  //       `${BACKEND_URL}/ai/generate`,
+  //       {
+  //         prompt,
+  //         modelId: selectedModel,
+  //         num: 1,
+  //       },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     console.log("Image generation started!");
+  //     setPrompt("");
+  //   } catch (error) {
+  //     console.log(error, "Failed to generate image");
+  //   } finally {
+  //     setIsGenerating(false);
+  //   }
+  // };
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="flex justify-end pt-4">
-          <div className="flex items-center gap-2 w-full max-w-xl">
-            <input
-              type="text"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your prompt..."
-              className="flex-1 border border-gray-300 rounded-md px-4 py-2"
+    <div className="space-y-4">
+      <div className="text-2xl font-semibold">Select Model</div>
+
+      <div
+        ref={scrollRef}
+        className="flex overflow-x-auto no-scrollbar gap-4 scroll-smooth scroll-px-4 snap-x snap-mandatory max-w-4xl"
+      >
+        {models.map((model) => (
+          <div
+            key={model.id}
+            onClick={() => setSelectedModel(model.id)}
+            className={`flex-shrink-0 w-40 snap-start cursor-pointer rounded-lg p-2 border-2 transition duration-200 ${
+              selectedModel === model.id
+                ? "border-blue-500 ring-2 ring-blue-300"
+                : "border-gray-200"
+            }`}
+          >
+            <img
+              src={model.image}
+              alt={model.name}
+              className="w-full h-24 object-cover rounded-md mb-2"
             />
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !prompt || !selectedModel}
-              variant={"outline"}
-              className="relative z-20 cursor-pointer"
-            >
-              Generate Image <Sparkles size={24} />
-            </Button>
+            <div className="text-sm font-medium text-center">{model.name}</div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
-
 export default GenerateImage;
