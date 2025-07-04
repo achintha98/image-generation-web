@@ -12,7 +12,7 @@ const GenerateImage = () => {
   const scrollRef = useRef(null);
 
   const [prompt, setPrompt] = useState("");
-  const [models, setModels] = useState("");
+  const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getToken } = useAuth();
@@ -59,10 +59,22 @@ const GenerateImage = () => {
 
   useEffect(() => {
     (async () => {
-      const token = await getToken();
-      const response = await axios.get(`${BACKEND_URL}/ai/models`);
-      setModels(response.data.models);
-      setSelectedModel(response.data.models[0]?.id);
+      try {
+        const token = await getToken();
+        const response = await axios.get(`${BACKEND_URL}/ai/models`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data?.models?.length) {
+          setModels(response.data.models);
+          setSelectedModel(response.data.models[0].id);
+        } else {
+          console.warn("No models received from backend.");
+        }
+      } catch (error) {
+        console.error("Failed to fetch models:", error);
+        // Optionally show an error state in UI
+      }
     })();
   }, []);
 
