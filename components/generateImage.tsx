@@ -8,11 +8,17 @@ import axios from "axios";
 import { BACKEND_URL } from "@/app/config";
 import { Sparkles } from "lucide-react";
 
+interface TModel {
+  id: string;
+  name: string;
+  thumbnail: string;
+}
+
 const GenerateImage = () => {
   const scrollRef = useRef(null);
 
   const [prompt, setPrompt] = useState("");
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState<TModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { getToken } = useAuth();
