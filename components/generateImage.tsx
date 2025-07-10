@@ -12,6 +12,7 @@ interface TModel {
   id: string;
   name: string;
   thumbnail: string;
+  image: string;
 }
 
 const GenerateImage = () => {
@@ -70,10 +71,13 @@ const GenerateImage = () => {
         const response = await axios.get(`${BACKEND_URL}/ai/models`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(response);
+        console.log(response.data);
+        console.log(response.data.length);
 
-        if (response.data?.models?.length) {
-          setModels(response.data.models);
-          setSelectedModel(response.data.models[0].id);
+        if (response.data.length) {
+          setModels(response.data);
+          setSelectedModel(response.data[0].id);
         } else {
           console.warn("No models received from backend.");
         }
@@ -89,7 +93,7 @@ const GenerateImage = () => {
       {/* Model Selector */}
       <div className="space-y-3">
         <div className="text-2xl font-semibold">Select Model</div>
-
+        {}
         <div
           ref={scrollRef}
           className="flex overflow-x-auto no-scrollbar gap-4 scroll-smooth scroll-px-4 snap-x snap-mandatory max-w-4xl"
@@ -97,7 +101,12 @@ const GenerateImage = () => {
           {models.map((model) => (
             <div
               key={model.id}
-              onClick={() => setSelectedModel(model.id)}
+              onClick={() => {
+                console.log(models);
+                console.log(model.thumbnail);
+
+                setSelectedModel(model.id);
+              }}
               className={`flex-shrink-0 w-40 snap-start cursor-pointer rounded-lg p-2 border-2 transition duration-200 ${
                 selectedModel === model.id
                   ? "border-blue-500 ring-2 ring-blue-300"
@@ -105,9 +114,9 @@ const GenerateImage = () => {
               }`}
             >
               <img
-                src={model.image}
+                src="https://variety.com/wp-content/uploads/2024/12/gal.jpg?w=1000&h=667&crop=1"
                 alt={model.name}
-                className="w-full h-24 object-cover rounded-md mb-2"
+                className="w-full aspect-[4/3] object-contain rounded-md mb-2"
               />
               <div className="text-sm font-medium text-center">
                 {model.name}
