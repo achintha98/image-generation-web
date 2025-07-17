@@ -20,7 +20,7 @@ const GenerateImage = () => {
 
   const [prompt, setPrompt] = useState("");
   const [models, setModels] = useState<TModel[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>();
+  const [selectedModel, setSelectedModel] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const { getToken } = useAuth();
 
@@ -48,12 +48,11 @@ const GenerateImage = () => {
         `${BACKEND_URL}/ai/generate`,
         {
           prompt,
-          modelId: selectedModel,
-          num: 1,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
+          selectedModel,
         }
+        // {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // }
       );
       console.log("Image generation started!");
       setPrompt("");
@@ -137,6 +136,10 @@ const GenerateImage = () => {
           <button
             disabled={isGenerating || !prompt || !selectedModel}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 disabled:opacity-50"
+            onClick={() => {
+              console.log(selectedModel);
+              handleGenerate();
+            }}
           >
             Generate Image <Sparkles size={18} />
           </button>
